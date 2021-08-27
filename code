@@ -1,0 +1,217 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from ipywidgets import interact
+
+data = pd.read_csv('data.csv')
+
+
+print("Shape of dataset:",data.shape)
+
+data.head()
+
+# data.tail()
+
+data.isnull().sum()
+
+data['label'].value_counts()
+
+print("Average ratio of Nitrogen in the soil :{0:.2f}".format(data['N'].mean()))
+print("Average ratio of Phsphorous in the soil :{0:.2f}".format(data['P'].mean()))
+print("Average ratio of Potassium in the soil :{0:.2f}".format(data['K'].mean()))
+print("Average Temperature in the Celsius :{0:.2f}".format(data['temperature'].mean()))
+print("Average relative Humidity in % :{0:.2f}".format(data['humidity'].mean()))
+print("Average PH Value of the soil :{0:.2f}".format(data['ph'].mean()))
+print("Average Rainfall in mm :{0:.2f}".format(data['rainfall'].mean()))
+
+
+@interact
+def summary(crops = list(data['label'].value_counts().index)):
+    x=data[data['label'] == crops]
+    print("--------------------------------------------------")
+    print("Statistics for Nitrogen")
+    print("Minimum Nitrogen required:",x['N'].min())
+    print("Average of Nitrogen required:",x['N'].mean())
+    print("Maximum Nitrogen required:",x['N'].max())
+    
+    print("--------------------------------------------------")
+    print("Statistics for Phosphorous")
+    print("Minimum Phosphorous required:",x['P'].min())
+    print("Average of Phosphorous required:",x['P'].mean())
+    print("Maximum Phosphorous required:",x['P'].max())
+    
+    print("--------------------------------------------------")
+    print("Statistics for Potassium")
+    print("Minimum Potassium required:",x['K'].min())
+    print("Average of Potassium required:",x['K'].mean())
+    print("Maximum Potassium required:",x['K'].max())
+    
+    print("--------------------------------------------------")
+    print("Statistics for Temperature")
+    print("Minimum Temperature required:{:.2f}".format(x['temperature'].min()))
+    print("Average of Temperature required :{:.2f}".format(x['temperature'].mean()))
+    print("Maximum Temperature required:{:.2f}".format(x['temperature'].max()))
+    
+    print("--------------------------------------------------")
+    print("Statistics for Humidity")
+    print("Minimum Humidity required:{:.2f}".format(x['humidity'].min()))
+    print("Average of Humidity required :{:.2f}".format(x['humidity'].mean()))
+    print("Maximum Humidity required:{:.2f}".format(x['humidity'].max()))
+    
+    print("--------------------------------------------------")
+    print("Statistics for ph")
+    print("Minimum ph required:{:.2f}".format(x['ph'].min()))
+    print("Average of ph required :{:.2f}".format(x['ph'].mean()))
+    print("Maximum ph required:{:.2f}".format(x['ph'].max()))
+    
+    print("--------------------------------------------------")
+    print("Statistics for rainfall")
+    print("Minimum rainfall required:{:.2f}".format(x['rainfall'].min()))
+    print("Average of rainfall required :{:.2f}".format(x['rainfall'].mean()))
+    print("Maximum rainfall required:{:.2f}".format(x['rainfall'].max()))
+
+@interact
+def compare(conditions =['N','P','K','temperature','ph','humidity','rainfall']):
+    print("Average value for:", conditions," is {0:.2f}".format(data[conditions].mean()))
+    print("-----------------------------------------------------------------")
+    print("Rice : {0:.2f}".format(data[(data['label']=='rice')][conditions].mean()))
+    print("Black Grams : {0:.2f}".format(data[(data['label']=='blackgram')][conditions].mean()))
+    print("Banana : {0:.2f}".format(data[(data['label']=='banana')][conditions].mean()))
+    print("Jute : {0:.2f}".format(data[(data['label']=='jute')][conditions].mean()))
+    print("Coconut : {0:.2f}".format(data[(data['label']=='coconut')][conditions].mean()))
+    print("Apple : {0:.2f}".format(data[(data['label']=='apple')][conditions].mean()))
+    print("Papaya : {0:.2f}".format(data[(data['label']=='papaya')][conditions].mean()))
+    print("Muskmelon : {0:.2f}".format(data[(data['label']=='muskmelon')][conditions].mean()))
+    print("watermelon : {0:.2f}".format(data[(data['label']=='watermelon')][conditions].mean()))
+    print("Kidney Beans : {0:.2f}".format(data[(data['label']=='kidneybeans')][conditions].mean()))
+    print("Mung Beans : {0:.2f}".format(data[(data['label']=='mungbean')][conditions].mean()))
+    print("Orange : {0:.2f}".format(data[(data['label']=='orange')][conditions].mean()))
+    print("Chick Peas : {0:.2f}".format(data[(data['label']=='chickpeas')][conditions].mean()))
+    print("Lentils : {0:.2f}".format(data[(data['label']=='lentil')][conditions].mean()))
+    print("Cotton : {0:.2f}".format(data[(data['label']=='cotton')][conditions].mean()))
+    print("Maize : {0:.2f}".format(data[(data['label']=='maize')][conditions].mean()))
+    print("Moth Beans : {0:.2f}".format(data[(data['label']=='mothbeans')][conditions].mean()))
+    print("Pigeon Peas : {0:.2f}".format(data[(data['label']=='pigeonpeas')][conditions].mean()))
+    print("Mango : {0:.2f}".format(data[(data['label']=='mango')][conditions].mean()))
+    print("Pomegranate : {0:.2f}".format(data[(data['label']=='pomegranate')][conditions].mean()))
+    print("Coffee : {0:.2f}".format(data[(data['label']=='coffee')][conditions].mean()))
+
+@interact
+def compare(conditions =['N','P','K','temperature','ph','humidity','rainfall']):
+    print("Crops which require greater than average",conditions,'\n')
+    print(data[data[conditions] > data[conditions].mean()]['label'].unique())
+    print("------------------------------------------------------------------")
+    print("Crops which require less than average",conditions,'\n')
+    print(data[data[conditions] < data[conditions].mean()]['label'].unique())
+
+
+
+print("Some Intersting Pattern")
+print("----------------------------------------------------------------------")
+print("Crops which requires very High Ratio of Nitrogen Content in soil:",data[data['N'] > 120]['label'].unique())
+print("Crops which requires very High Ratio of Phosphorous Content in soil:",data[data['P'] > 100]['label'].unique())
+print("Crops which requires very High Ratio of Potassium Content in soil:",data[data['K'] > 200]['label'].unique())
+print("Crops which requires very High Ratio of Rainfall :",data[data['rainfall'] > 200]['label'].unique())
+print("Crops which requires very low Temperature:",data[data['temperature'] < 10]['label'].unique())
+print("Crops which requires very High Temperature:",data[data['temperature'] > 40]['label'].unique())
+print("Crops which requires very low Humidity:",data[data['humidity'] < 20]['label'].unique())
+print("Crops which requires very High Humidity:",data[data['humidity'] > 10]['label'].unique())
+print("Crops which requires very low pH:",data[data['ph'] < 4]['label'].unique())
+print("Crops which requires very High pH:",data[data['ph'] > 9]['label'].unique())
+
+    print("Summer Crops")
+    print(data[(data['temperature'] > 30) & (data['humidity']>50)]['label'].unique())
+    print("--------------------------------------------------------------------")
+    
+    print("Winter Crops")
+    print(data[(data['temperature'] < 20) & (data['humidity']>30)]['label'].unique())
+    print("--------------------------------------------------------------------")
+    
+    print("Rainy Crops")
+    print(data[(data['rainfall'] > 200) & (data['humidity']>30)]['label'].unique())
+    print("--------------------------------------------------------------------")
+
+from sklearn.cluster import KMeans
+
+x = data.drop(['label'], axis=1)
+
+x = x.values
+
+print(x.shape)
+
+plt.rcParams['figure.figsize'] = (10,4)
+
+wcss = []
+for i in range(1,11):
+    km = KMeans(n_clusters = i, init = 'k-means++', max_iter =300, n_init =10, random_state = 0)
+    km.fit(x)
+    wcss.append(km.inertia_)
+    
+plt.plot(range(1,11),wcss)
+plt.title('The Elbow Method', fontsize = 20)
+plt.xlabel('No.of Clusters')
+plt.ylabel('wcss')
+plt.show()
+
+km = KMeans(n_clusters = 4, init = 'k-means++', max_iter =300, n_init =10, random_state = 0)
+y_means = km.fit_predict(x)
+
+a = data['label']
+y_means = pd.DataFrame(y_means)
+z = pd.concat([y_means,a],axis =1)
+z = z.rename(columns = {0: 'cluster'})
+
+print("Lets check the result After Applyng the K Means Clustering Analysis \n")
+print('Crops in First Cluster:', z[z['cluster'] == 0]['label'].unique())
+print("--------------------------------------------------------------------")
+
+print('Crops in Second Cluster:', z[z['cluster'] == 1]['label'].unique())
+print("--------------------------------------------------------------------")
+
+print('Crops in Third Cluster:', z[z['cluster'] == 2]['label'].unique())
+print("--------------------------------------------------------------------")
+
+print('Crops in Forth Cluster:', z[z['cluster'] == 3]['label'].unique())
+print("--------------------------------------------------------------------")
+
+y = data['label']
+x = data.drop(['label'],  axis = 1)
+
+print("shape of x:", x.shape)
+print("shape of y:", y.shape)
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size = 0.2, random_state = 0)
+
+print("The shape of x train:",x_train.shape)
+print("The shape of x test:",x_test.shape)
+print("The shape of y train:",y_train.shape)
+print("The shape of y test:",y_test.shape)
+
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(x_train,y_train)
+y_pred = model.predict(x_test)
+
+from sklearn.metrics import confusion_matrix
+
+plt.rcParams['figure.figsize'] = (10,10)
+cm = confusion_matrix(y_test,y_pred)
+sns.heatmap(cm,annot = True, cmap='Wistia')
+plt.title('Confusion Matrix for Logistic Regrestion', fontsize = 15)
+plt.show()
+
+data.head()
+
+prediction = model.predict((np.array([[90,
+                                     40,
+                                     40,
+                                     20,
+                                     80,
+                                     7,
+                                     200]])))
+print("The Suggested Crop for given Climatic Condition is :",prediction)
